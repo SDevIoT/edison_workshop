@@ -53,8 +53,8 @@ void loop()
     lcd.setCursor(0,1);
     
     lcd.print(colorR);lcd.print("-");
-    lcd.print(colorG);;lcd.print("-");
-    lcd.print(colorB);
+    lcd.print(colorG);lcd.print("-");
+    lcd.print(colorB);lcd.print("     ");
     delay(100);
 
 }
