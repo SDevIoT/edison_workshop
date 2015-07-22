@@ -29,9 +29,9 @@ void loop()
 }
 void printColors(){
     lcd.setCursor(0,1);//Move cursor to col 0, row 1.
-    lcd.print("R: ");lcd.print(red);lcd.print(", ");
-    lcd.print("G: ");lcd.print(green);lcd.print(", ");
-    lcd.print("B: ");lcd.print(blue);lcd.print("   ");  
+    lcd.print("R");lcd.print(red);lcd.print("|");
+    lcd.print("G");lcd.print(green);lcd.print("|");
+    lcd.print("B");lcd.print(blue);lcd.print("      ");  
 }
 void setBackgroundColor(){
     red +=5;
