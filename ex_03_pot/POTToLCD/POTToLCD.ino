@@ -3,6 +3,7 @@
   2015 Copyright (c) Intel Corporation.  All right reserved.
 
   Author: Jose Nunez
+  
 */
 
 #include <Wire.h>
