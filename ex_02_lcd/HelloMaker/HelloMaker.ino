@@ -1,9 +1,8 @@
 /*
   HelloMaker.ino
-  2013 Copyright (c) Intel Corporation.  All right reserved.
+  2015 Copyright (c) Intel Corporation.  All right reserved.
 
   Author:Jose Nunez
-  2015-07-21
 
 */
 
