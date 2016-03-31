@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EDISON WEB CONTROL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <button disabled id="cmdClickMe">CLICK ME!!!!</button>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#cmdClickMe").removeProp("disabled").on("click", function () {
+                    var url = "http://192.168.43.186:8125/";
+                    $.ajax(url, {
+                        error: function (data) {
+                            console.log("ERROR");
+                            console.log(data);
+                        },
+                        success: function (data) {
+                            console.log("SUCCESS");
+                            console.log(data);
+                        }
+                    });
+                });
+            });
+
+        </script>
+    </body>
+</html>
