@@ -2,36 +2,42 @@ var http = require('http'),
         fs = require('fs');
 var serverPort = 8124;
 
-fs.readFile('./main.html', function (err, html) {
-    if (err) {
-        throw err;
-    }
-    http.createServer(function (request, response) {
-        
-        response.writeHeader(200, {"Content-Type": "text/html"});
-        response.write(html);
-        response.end();
-    }).listen(serverPort);
+console.log("VERSION 1912");
+http.createServer(function (request, response) {
+    console.log("REQUEST RECEIVED!");
+    console.log(request.url);
+    var path = "./main.html";
 
-    http.createServer(function (request, response) {
+    if (request.url !== "/MOVE") {
+        if (request.url !== "/") {
+            path = "." + request.url;
+        }
+
+        console.log("PATH: " + path);
+        var content = "";
+        try {
+            response.writeHeader(200, {"Content-Type": "text/html"});
+            content = fs.readFileSync(path).toString();
+            response.write(content);
+            response.end();
+        } catch (ex) {
+            response.writeHeader(401, {"Content-Type": "text/html"});
+            console.log("exception");
+        }
+    } else {
+        console.log(request.url);
         response.writeHeader(200, {
             "Content-Type": "text/html",
-            "Access-Control-Allow-Origin":"*"
+            "Access-Control-Allow-Origin": "*"
         });
         var datetime = new Date();
         response.write("Command Received!  (" + datetime + ")");
         response.end();
+        var command = "MOVE";
+        fs.writeFileSync('./command.txt', command);
+        console.log('File saved!');
+    }
 
-        fs.writeFile('command.txt', 'MOVE', function (err) {
-            if (err)
-                throw err;
-            console.log('File saved!');
-        });
+}).listen(serverPort);
 
-
-    }).listen(8125);
-
-
-    console.log("Listening to port " + serverPort);
-    console.log("Listening to port " + 8125);
-});
+console.log("Listening to port " + serverPort);
