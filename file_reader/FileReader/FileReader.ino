@@ -9,13 +9,13 @@ void setup() {
   delay(3000);
   Serial.begin(9600);
   Serial.println("FILE READER READY!");
-
-  system("node \"/home/root/node_js_server/main.js\" > /home/root/start.txt & ");
+  system("echo HELLO > /home/root/serverlog.txt");
+  system("/usr/bin/node /home/root/node_js_server/main.js >> /home/root/serverlog.txt & ");
 }
 
 String lastValueRead = "";
 void loop() {
-    String fileName = "/home/root/node_js_server/command.txt";
+    String fileName = "/home/root/command.txt";
 
     FILE *filePointer;
     filePointer = fopen(fileName.buffer, "rb");/*rb is important for the whole thing to work!!!*/

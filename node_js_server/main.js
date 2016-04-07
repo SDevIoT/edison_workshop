@@ -2,15 +2,15 @@ var http = require('http'),
         fs = require('fs');
 var serverPort = 8124;
 
-console.log("VERSION 1912");
+console.log("VERSION 0406.1818");
 http.createServer(function (request, response) {
     console.log("REQUEST RECEIVED!");
     console.log(request.url);
-    var path = "./main.html";
+    var path = "/home/root/node_js_server/main.html";
 
     if (request.url !== "/MOVE") {
         if (request.url !== "/") {
-            path = "." + request.url;
+            path = "/home/root/node_js_server" + request.url;
         }
 
         console.log("PATH: " + path);
@@ -34,7 +34,7 @@ http.createServer(function (request, response) {
         response.write("Command Received!  (" + datetime + ")");
         response.end();
         var command = "MOVE";
-        fs.writeFileSync('./command.txt', command);
+        fs.writeFileSync('/home/root/command.txt', command);
         console.log('File saved!');
     }
 
