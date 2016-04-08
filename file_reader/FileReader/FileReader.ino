@@ -10,11 +10,11 @@ void setup() {
   Serial.begin(9600);
   Serial.println("FILE READER READY!");
   system("echo HELLO > /home/root/serverlog.txt");
-  system("/usr/bin/node /home/root/node_js_server/main.js >> /home/root/serverlog.txt & ");
+  system("/usr/bin/node /home/root/node_modules/jn_jj_server/index.js >> /home/root/serverlog.txt & ");
 }
 
 String lastValueRead = "";
-void loop() {
+void loop() { 
     String fileName = "/home/root/command.txt";
 
     FILE *filePointer;

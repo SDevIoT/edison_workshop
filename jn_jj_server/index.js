@@ -27,8 +27,9 @@
         console.log("REQUEST RECEIVED!");
         console.log(request.url);
         var path = rootPath + "/index.html";
-
-        if (request.url !== "/MOVE") {
+        console.log("INDEX OF MOVE");
+        console.log(request.url.indexOf("/MOVE"));
+        if (request.url.indexOf("/MOVE") === -1) {
             if (request.url !== "/") {
                 path = rootPath + request.url;
             }
@@ -54,7 +55,7 @@
             response.write("Command Received!  (" + datetime + ")");
             response.end();
             var command = "MOVE";
-            fs.writeFileSync(rootPath + '/command.txt', command);
+            fs.writeFileSync('/home/root/command.txt', command);
             console.log('File saved!');
         }
 
