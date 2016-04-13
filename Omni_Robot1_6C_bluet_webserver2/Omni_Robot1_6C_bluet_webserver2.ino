@@ -54,6 +54,9 @@ subrutines
 #define CH3 12
 #define CH4 13
 
+#define TURNED_ON true
+#define TURNED_OFF false
+
 //variables to capture pulse width
 int ch1_duration = 0;
 int ch2_duration = 0;
@@ -66,7 +69,7 @@ int CH2_off = 1;
 int CH3_off = 1;
 int CH4_off = 1;
 
-int flag = 1;
+bool motors_on = TURNED_ON; //DEFAULTS TO ON TO MAKE IT POSSIBLE TO TURN THEM OFF INITIALLY.
 int incomingByte;
 int bluetooth_flag = 0; //if bluetooth activated need to have timer because remote control signal will stop it instantly
 
@@ -171,10 +174,6 @@ void loop() {
 
 
     } else {
-        //  if (bluetooth_flag == 1) {
-        // bluetooth_flag = 0;
-        //  delay(2000); 
-        //  }
         ch1_duration = pulseIn(CH1, HIGH, 100000);
         ch2_duration = pulseIn(CH2, HIGH, 100000);
         //ch3_duration = pulseIn(CH3,HIGH);
@@ -289,26 +288,9 @@ void loop() {
     } // else bracket from (Serial.available)
 
     if (CH1_off == 0 || CH2_off == 0 || CH4_off == 0) {
-
-        if (flag == 0) {
-            Serial.println("Activating Motors...");
-            flag = 1; //to avoid to set pwm pin when not changed, trying to solve not continuos movement
-            analogWrite(FRONT_LEFT_STEP_PIN, 127); // using PWM as pulse with 50% duty cicle =127
-            analogWrite(FRONT_RIGHT_STEP_PIN, 127);
-            analogWrite(REAR_LEFT_STEP_PIN, 127);
-            analogWrite(REAR_RIGHT_STEP_PIN, 127);
-        } else {
-            //do nothing 
-        }
+        turnMotorsOn();
     } else {
-        if (flag == 1) {
-            Serial.println("TURNING Motors OFF...");
-            flag = 0; //to avoid to set pwm pin when not changed 
-            analogWrite(FRONT_LEFT_STEP_PIN, 0); // using PWM to complete low, no pulses
-            analogWrite(FRONT_RIGHT_STEP_PIN, 0);
-            analogWrite(REAR_LEFT_STEP_PIN, 0);
-            analogWrite(REAR_RIGHT_STEP_PIN, 0);
-        }
+        turnMotorsOff();
     }
 
     if (bluetooth_flag == 1) {
@@ -321,6 +303,28 @@ void loop() {
 } ///void_loop bracket
 
 //***********************************subrutines********************************************************************
+
+void turnMotorsOff(){
+    if (motors_on == TURNED_ON) {//TURN MOTORS OFF ONLY IF FLAG IS ON
+        Serial.println("TURNING Motors OFF...");
+        motors_on = TURNED_OFF; //to avoid to set pwm pin when not changed 
+        analogWrite(FRONT_LEFT_STEP_PIN, 0); // using PWM to complete low, no pulses
+        analogWrite(FRONT_RIGHT_STEP_PIN, 0);
+        analogWrite(REAR_LEFT_STEP_PIN, 0);
+        analogWrite(REAR_RIGHT_STEP_PIN, 0);
+    }
+}
+
+void turnMotorsOn(){
+    if (motors_on == TURNED_OFF) {//TURN MOTORS ON ONLY IF FLAG IS OFF
+        Serial.println("Activating Motors...");
+        motors_on = TURNED_ON; //to avoid to set pwm pin when not changed, trying to solve not continuos movement
+        analogWrite(FRONT_LEFT_STEP_PIN, 127); // using PWM as pulse with 50% duty cicle =127
+        analogWrite(FRONT_RIGHT_STEP_PIN, 127);
+        analogWrite(REAR_LEFT_STEP_PIN, 127);
+        analogWrite(REAR_RIGHT_STEP_PIN, 127);
+    }  
+}
 
 int Backward() {
     digitalWrite(FRONT_LEFT_DIR_PIN, LOW);
