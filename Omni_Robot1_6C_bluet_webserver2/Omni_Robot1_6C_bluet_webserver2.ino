@@ -66,7 +66,7 @@ int CH2_off = 1;
 int CH3_off = 1;
 int CH4_off = 1;
 
-int flag = 1;
+bool motors_on = false;
 int incomingByte;
 int bluetooth_flag = 0; //if bluetooth activated need to have timer because remote control signal will stop it instantly
 
@@ -172,7 +172,7 @@ void loop() {
         //ch3_duration = pulseIn(CH3,HIGH);
         ch4_duration = pulseIn(CH4, HIGH, 100000);
 
-        //CHX_off flag is how pulses for the steppers are activated.
+        //CHX_off motors_on is how pulses for the steppers are activated.
         //incomingByte is signal from serial =~ bluetooth.
 
         if (ch1_duration > 1700 ) {
@@ -255,21 +255,18 @@ void loop() {
     } // else bracket from (Serial.available)
 
     if (CH1_off == 0 || CH2_off == 0 || CH4_off == 0) {
-
-        if (flag == 0) {
+        if (motors_on == false) { //ONLY ACTIVATES MOTORS WHEN THEY ARE TURNED OFF
             Serial.println("Activating Motors...");
-            flag = 1; //to avoid to set pwm pin when not changed, trying to solve not continuos movement
+            motors_on= true; //to avoid to set pwm pin when not changed, trying to solve not continuos movement
             analogWrite(FRONT_LEFT_STEP_PIN, 127); // using PWM as pulse with 50% duty cicle =127
             analogWrite(FRONT_RIGHT_STEP_PIN, 127);
             analogWrite(REAR_LEFT_STEP_PIN, 127);
             analogWrite(REAR_RIGHT_STEP_PIN, 127);
-        } else {
-            //do nothing 
         }
     } else {
-        if (flag == 1) {
+        if (motors_on == false) { //ONLY DEACTIVATES MOTORS WHEN THEY ARE TURNED ON
             Serial.println("TURNING Motors OFF...");
-            flag = 0; //to avoid to set pwm pin when not changed 
+            motors_on = false; //to avoid to set pwm pin when not changed 
             analogWrite(FRONT_LEFT_STEP_PIN, 0); // using PWM to complete low, no pulses
             analogWrite(FRONT_RIGHT_STEP_PIN, 0);
             analogWrite(REAR_LEFT_STEP_PIN, 0);
