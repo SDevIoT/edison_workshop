@@ -264,7 +264,7 @@ void loop() {
             analogWrite(REAR_RIGHT_STEP_PIN, 127);
         }
     } else {
-        if (motors_on == false) { //ONLY DEACTIVATES MOTORS WHEN THEY ARE TURNED ON
+        if (motors_on == true) { //ONLY DEACTIVATES MOTORS WHEN THEY ARE TURNED ON
             Serial.println("TURNING Motors OFF...");
             motors_on = false; //to avoid to set pwm pin when not changed 
             analogWrite(FRONT_LEFT_STEP_PIN, 0); // using PWM to complete low, no pulses
