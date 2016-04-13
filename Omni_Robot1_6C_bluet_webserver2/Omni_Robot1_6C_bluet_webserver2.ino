@@ -72,7 +72,7 @@ int bluetooth_flag = 0; //if bluetooth activated need to have timer because remo
 
 String lastValueRead = ""; //FILE LAST VALUE READ for WEB CONTROL
 
-bool serialLogEnabled = true; //DISABLE if NEEDED due to NOISE
+bool serialLogEnabled = false; //DISABLE if NEEDED due to NOISE
 
 void setup() {
     // initialize digital input and output pins.
@@ -107,6 +107,10 @@ void setup() {
 
     SerialPrintln("Setup Complete!");
 }
+
+
+int ch2_consecutiveReadings_B = 0;
+int ch2_consecutiveReadings_F = 0;
 
 void loop() {
 
@@ -171,40 +175,81 @@ void loop() {
         //CHX_off flag is how pulses for the steppers are activated.
         //incomingByte is signal from serial =~ bluetooth.
 
-        if (ch1_duration > 1550) {
+        if (ch1_duration > 1700 ) {
+            Serial.print("TURN RIGHT: ");
+            Serial.println(ch1_duration);
             CH1_off = 0;
             Turn_Right();
+
         }//ch1_duration > 2 solve when remote is off = 0
-        else if (ch1_duration < 1300 && ch1_duration > 2) {
+        else if (ch1_duration < 1200 && ch1_duration > 100) {
+            Serial.print("TURN LEFT: ");
+            Serial.println(ch1_duration);
             CH1_off = 0;
             Turn_Left();
         }// ch1_duration == 0 solves if remote turn off while moving handle.
-        else if (ch1_duration < 1551 && ch1_duration > 1299) {
+        else if (ch1_duration != 0) { //IGNORING CH ZEROES HERE.... WHEN CH1 and CH2 are ZERO WE TURN ALL OFF LATER ON
+            Serial.print("CH1 OFF: ");
+            Serial.println(ch1_duration);          
             CH1_off = 1;
         }
 
-        if (ch2_duration > 1550) {
-            CH2_off = 0;
-            Backward();
+        if (ch2_duration > 1700) {
+            Serial.print("BACKWARD: ");
+            Serial.println(ch2_duration);          
+            ch2_consecutiveReadings_F=0;
+            if(ch2_consecutiveReadings_B>2){
+              CH2_off = 0;
+              Backward();
+            } else {
+              ch2_consecutiveReadings_B++;
+            }
+            
         }//ch2_duration > 2 solve when remote is off = 0
-        else if (ch2_duration < 1300 && ch2_duration > 2) {
-            CH2_off = 0;
-            Forward();
+        else if (ch2_duration < 1200 && ch2_duration > 100) {
+            Serial.print("FORWARD: ");
+            Serial.println(ch2_duration);
+            ch2_consecutiveReadings_B=0;
+            
+            if(ch2_consecutiveReadings_F>2){            
+              CH2_off = 0;
+              Forward();
+            } else {
+              ch2_consecutiveReadings_F++;
+            }
         }// ch2_duration == 0 solves if remote turn off while moving handle.
-        else if (ch2_duration < 1551 && ch2_duration > 1299) {
+        else if (ch2_duration != 0) { //IGNORING CH ZEROES HERE.... WHEN CH1 and CH2 are ZERO WE TURN ALL OFF LATER ON
+            ch2_consecutiveReadings_B=0;
+            ch2_consecutiveReadings_F=0;
+            Serial.print("CH2 OFF: ");
+            Serial.println(ch2_duration);            
             CH2_off = 1;
         }
 
-        if (ch4_duration > 1550) {
+        if (ch4_duration > 1700) {
+            Serial.print("LEFT SIDE: ");
+            Serial.println(ch4_duration);            
             CH4_off = 0;
             Left_Side();
         }//ch4_duration > 2 solve when remote is off = 0
-        else if (ch4_duration < 1300 && ch4_duration > 2) {
+        else if (ch4_duration < 1200 && ch4_duration > 100) {
+            Serial.print("RIGHT SIDE: ");
+            Serial.println(ch4_duration);                  
             CH4_off = 0;
             Right_Side();
         }// ch3_duration == 0 solves if remote turn off while moving handle.
-        else if (ch4_duration < 1551 && ch4_duration > 1299) {
+        else if (ch4_duration != 0) { //IGNORING CH4 ZEROES HERE.... CH4 ZEROES SUCK
+            Serial.print("CH4 OFF: ");
+            Serial.println(ch4_duration);                  
             CH4_off = 1;
+        }
+
+
+        if(ch1_duration == 0 && ch2_duration==0){
+          Serial.println("REMOTE OFF DETECTED!!!!!");
+          CH1_off=1;
+          CH2_off=1;
+          CH4_off=1;
         }
 
     } // else bracket from (Serial.available)
@@ -212,6 +257,7 @@ void loop() {
     if (CH1_off == 0 || CH2_off == 0 || CH4_off == 0) {
 
         if (flag == 0) {
+            Serial.println("Activating Motors...");
             flag = 1; //to avoid to set pwm pin when not changed, trying to solve not continuos movement
             analogWrite(FRONT_LEFT_STEP_PIN, 127); // using PWM as pulse with 50% duty cicle =127
             analogWrite(FRONT_RIGHT_STEP_PIN, 127);
@@ -222,6 +268,7 @@ void loop() {
         }
     } else {
         if (flag == 1) {
+            Serial.println("TURNING Motors OFF...");
             flag = 0; //to avoid to set pwm pin when not changed 
             analogWrite(FRONT_LEFT_STEP_PIN, 0); // using PWM to complete low, no pulses
             analogWrite(FRONT_RIGHT_STEP_PIN, 0);
