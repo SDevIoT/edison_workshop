@@ -1,6 +1,6 @@
 {
   "name": "jn_jj_server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "NodeJS Server for JJ",
   "main": "index.js",
   "scripts": {

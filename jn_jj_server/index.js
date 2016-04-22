@@ -1,5 +1,5 @@
 (function () {
-    var versionString = "0407.1601";
+    var versionString = "0421.1832";
     var argv = process.argv;
 
     console.log("JN JJ SERVER " + versionString);
@@ -29,7 +29,33 @@
         var path = rootPath + "/index.html";
         console.log("INDEX OF MOVE");
         console.log(request.url.indexOf("/MOVE"));
-        if (request.url.indexOf("/MOVE") === -1) {
+        if (request.url.indexOf("/MOVE") !== -1) {
+            console.log(request.url);
+            response.writeHeader(200, {
+                "Content-Type": "text/html",
+                "Access-Control-Allow-Origin": "*"
+            });
+            var datetime = new Date();
+            response.write("Command Received!  (" + datetime + ")");
+            response.end();
+            var command = "MOVE";
+            fs.writeFileSync('/home/root/command.txt', command);
+            console.log('File saved!');
+
+        } else if (request.url.indexOf("/BACK") !== -1) {
+            console.log(request.url);
+            response.writeHeader(200, {
+                "Content-Type": "text/html",
+                "Access-Control-Allow-Origin": "*"
+            });
+            var datetime = new Date();
+            response.write("Command Received!  (" + datetime + ")");
+            response.end();
+            var command = "BACK";
+            fs.writeFileSync('/home/root/command.txt', command);
+            console.log('File saved!');
+
+        } else {
             if (request.url !== "/") {
                 path = rootPath + request.url;
             }
@@ -45,18 +71,7 @@
                 response.writeHeader(401, {"Content-Type": "text/html"});
                 console.log("exception");
             }
-        } else {
-            console.log(request.url);
-            response.writeHeader(200, {
-                "Content-Type": "text/html",
-                "Access-Control-Allow-Origin": "*"
-            });
-            var datetime = new Date();
-            response.write("Command Received!  (" + datetime + ")");
-            response.end();
-            var command = "MOVE";
-            fs.writeFileSync('/home/root/command.txt', command);
-            console.log('File saved!');
+
         }
 
     }).listen(serverPort);

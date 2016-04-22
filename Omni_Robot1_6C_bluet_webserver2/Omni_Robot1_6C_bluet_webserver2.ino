@@ -295,7 +295,7 @@ void loop() {
 
     if (bluetooth_flag == 1) {
         bluetooth_flag = 0;
-        delay(4000);
+        delay(2000);
         Serial.flush();
     }
 
