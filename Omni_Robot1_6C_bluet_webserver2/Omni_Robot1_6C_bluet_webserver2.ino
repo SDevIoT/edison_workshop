@@ -127,7 +127,7 @@ void loop() {
 
     String fileValue = readWebCommandFile();
 
-    if (Serial1.available() > 0 || fileValue == "MOVE") {
+    if (Serial1.available() > 0 || fileValue == "MOVE" || fileValue == "BACK") {
         // read serial and store in incomingByte  to control by bluetooth
         incomingByte = Serial1.read();
 
@@ -165,6 +165,13 @@ void loop() {
             SerialPrintln(" Moving ");
             CH2_off = 0;
             Forward();
+        }
+
+        
+        else if (fileValue == "BACK") {
+            SerialPrintln(" Moving ");
+            CH2_off = 0;
+            Backward();
         }
 
 
@@ -295,7 +302,7 @@ void loop() {
 
     if (bluetooth_flag == 1) {
         bluetooth_flag = 0;
-        delay(2000);
+        delay(2402);
         Serial.flush();
     }
 
