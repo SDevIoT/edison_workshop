@@ -69,7 +69,7 @@ void loop()
     lcd.print("LON:");
     lcd.print(flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6);
 
-   //if(pflat!=flat || pflon!=flon){
+   if(pflat!=flat || pflon!=flon){
       Serial.print("NEW DATA:  ");
       pflat = flat;
       pflon = flon;
@@ -90,7 +90,7 @@ void loop()
       String pvcloudData = "{\"lat\":\"" +strLat + "\",\"long\":\""+strLong+"\"}";
       Serial.println(pvcloudData);
       pvcloud.Write("GPS", pvcloudData);
-    //}
+    }
 
   }
   
