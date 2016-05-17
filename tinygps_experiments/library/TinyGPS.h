@@ -23,14 +23,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #ifndef TinyGPS_h
 #define TinyGPS_h
+#include <Arduino.h>
+//#include <math.h>
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+//#if defined(ARDUINO) && ARDUINO >= 100
+//#include "Arduino.h"
+//#include <math.h>
+
+//#else
+//#include "WProgram.h"
+//#endif
 
 #include <stdlib.h>
+//#include <RADEG.h>
 
 #define _GPS_VERSION 13 // software version of this library
 #define _GPS_MPH_PER_KNOT 1.15077945
@@ -43,6 +48,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 class TinyGPS
 {
 public:
+
+
   enum {
     GPS_INVALID_AGE = 0xFFFFFFFF,      GPS_INVALID_ANGLE = 999999999, 
     GPS_INVALID_ALTITUDE = 999999999,  GPS_INVALID_DATE = 0,
