@@ -108,7 +108,11 @@ void setup() {
     pinMode(REAR_RIGHT_STEP_PIN, OUTPUT);
     pinMode(REAR_RIGHT_DIR_PIN, OUTPUT);
 
+    motors_on = TURNED_OFF;
+    turnMotorsOff();
     SerialPrintln("Setup Complete!");
+  
+    
 }
 
 
@@ -127,6 +131,7 @@ void loop() {
 
     String fileValue = readWebCommandFile();
 
+    //FIRST: CHECK IF BLUETOOTH HAS ANY COMMAND
     if (Serial1.available() > 0 || fileValue == "MOVE" || fileValue == "BACK") {
         // read serial and store in incomingByte  to control by bluetooth
         incomingByte = Serial1.read();
@@ -180,7 +185,7 @@ void loop() {
         bluetooth_flag = 1;
 
 
-    } else {
+    } else { //NO BLUETOOTH COMMAND... CHECK REMOTE
         ch1_duration = pulseIn(CH1, HIGH, 100000);
         ch2_duration = pulseIn(CH2, HIGH, 100000);
         //ch3_duration = pulseIn(CH3,HIGH);
